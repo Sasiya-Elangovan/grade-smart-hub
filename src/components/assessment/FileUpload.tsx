@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Upload, Check, X } from 'lucide-react';
+import { Upload, Check, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -51,10 +51,26 @@ export function FileUpload({
   };
 
   const uploadFile = async () => {
-    if (!uploadedFile || !user) return;
+    if (!uploadedFile || !user) {
+      toast.error("Please select a file first or login");
+      return;
+    }
     
     try {
       setUploading(true);
+      
+      // Create bucket if it doesn't exist
+      const { data: bucketExists } = await supabase.storage.getBucket(bucketName);
+      
+      if (!bucketExists) {
+        const { error: createBucketError } = await supabase.storage.createBucket(bucketName, {
+          public: true,
+        });
+        
+        if (createBucketError) {
+          throw createBucketError;
+        }
+      }
       
       // Create unique file path
       const fileExt = uploadedFile.name.split('.').pop();
@@ -93,10 +109,42 @@ export function FileUpload({
     setPreviewUrl(null);
   };
 
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      
+      if (file.size > maxFileSize * 1024 * 1024) {
+        toast.error(`File size exceeds ${maxFileSize}MB limit`);
+        return;
+      }
+      
+      setUploadedFile(file);
+      
+      if (file.type.startsWith('image/')) {
+        const objectUrl = URL.createObjectURL(file);
+        setPreviewUrl(objectUrl);
+      } else {
+        setPreviewUrl(null);
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className={`${className}`}>
       {!uploadedFile ? (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <div 
+          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
           <div className="flex flex-col items-center justify-center space-y-2">
             <div className="rounded-full bg-primary/10 p-3">
               <Upload className="h-6 w-6 text-primary" />
@@ -152,7 +200,8 @@ export function FileUpload({
                 onClick={uploadFile}
                 disabled={uploading}
               >
-                {uploading ? "Uploading..." : <Check className="h-4 w-4" />}
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Check className="h-4 w-4" />}
+                {uploading ? "Uploading..." : "Upload"}
               </Button>
             </div>
           </div>

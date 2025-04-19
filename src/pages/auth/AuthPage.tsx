@@ -6,22 +6,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GraduationCap } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Navigate } from 'react-router-dom';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const { signIn, signUp } = useAuth();
+  const [role, setRole] = useState('student');
+  const { signIn, signUp, user, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLogin) {
       await signIn(email, password);
     } else {
-      await signUp(email, password, fullName);
+      await signUp(email, password, fullName, role);
     }
   };
+
+  // Redirect if already logged in
+  if (user && !loading) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -42,16 +50,32 @@ export default function AuthPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  placeholder="Enter your full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                />
-              </div>
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <Input
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="role">I am a:</Label>
+                  <RadioGroup value={role} onValueChange={setRole} className="flex space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="student" id="student" />
+                      <Label htmlFor="student">Student</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="teacher" id="teacher" />
+                      <Label htmlFor="teacher">Teacher</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </>
             )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

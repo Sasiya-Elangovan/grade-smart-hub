@@ -87,14 +87,6 @@ const HandwritingAssessment = () => {
     }
   };
 
-  const handleSaveDraft = () => {
-    if (title) {
-      toast.success("Assessment saved as draft");
-    } else {
-      toast.error("Please enter a title before saving");
-    }
-  };
-
   return (
     <AssessmentLayout
       title="Handwriting Evaluation"
@@ -129,6 +121,11 @@ const HandwritingAssessment = () => {
             onFileUploaded={handleTemplateUploaded} 
             acceptedFileTypes="image/*,.pdf"
           />
+          {templateUrl && (
+            <p className="text-sm text-muted-foreground">
+              Template uploaded successfully
+            </p>
+          )}
         </div>
         
         <div className="space-y-2">
@@ -154,7 +151,7 @@ const HandwritingAssessment = () => {
                 checked={criteria.ocr}
                 onChange={() => handleCheckboxChange('ocr')}
               />
-              <label htmlFor="criteria-ocr">OCR Accuracy (30%)</label>
+              <label htmlFor="criteria-ocr">OCR Accuracy</label>
             </div>
             <div className="flex items-center space-x-2">
               <input 
@@ -164,7 +161,7 @@ const HandwritingAssessment = () => {
                 checked={criteria.content}
                 onChange={() => handleCheckboxChange('content')}
               />
-              <label htmlFor="criteria-content">Content (50%)</label>
+              <label htmlFor="criteria-content">Content</label>
             </div>
             <div className="flex items-center space-x-2">
               <input 
@@ -174,7 +171,7 @@ const HandwritingAssessment = () => {
                 checked={criteria.grammar}
                 onChange={() => handleCheckboxChange('grammar')}
               />
-              <label htmlFor="criteria-grammar">Grammar (20%)</label>
+              <label htmlFor="criteria-grammar">Grammar</label>
             </div>
           </div>
         </div>
@@ -182,10 +179,10 @@ const HandwritingAssessment = () => {
         <div className="flex justify-end space-x-2">
           <Button 
             variant="outline" 
-            onClick={handleSaveDraft}
+            onClick={() => navigate('/assessments')}
             disabled={loading}
           >
-            Save as Draft
+            Cancel
           </Button>
           <Button 
             onClick={handleCreateAssessment}
