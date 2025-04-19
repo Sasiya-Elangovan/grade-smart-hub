@@ -9,7 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      assessments: {
+        Row: {
+          created_at: string
+          created_by: string
+          criteria: Json | null
+          description: string | null
+          id: string
+          instructions: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          criteria?: Json | null
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          criteria?: Json | null
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          assessment_id: string
+          content: string | null
+          created_at: string
+          criteria_scores: Json | null
+          feedback: Json | null
+          file_path: string | null
+          id: string
+          language: string | null
+          score: number | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_id: string
+          content?: string | null
+          created_at?: string
+          criteria_scores?: Json | null
+          feedback?: Json | null
+          file_path?: string | null
+          id?: string
+          language?: string | null
+          score?: number | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_id?: string
+          content?: string | null
+          created_at?: string
+          criteria_scores?: Json | null
+          feedback?: Json | null
+          file_path?: string | null
+          id?: string
+          language?: string | null
+          score?: number | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

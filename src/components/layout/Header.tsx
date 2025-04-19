@@ -1,9 +1,10 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { GraduationCap, Menu } from "lucide-react";
+import { GraduationCap, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Sheet,
   SheetContent,
@@ -16,13 +17,14 @@ interface HeaderProps {
 
 export function Header({ toggleSidebar }: HeaderProps) {
   const isMobile = useIsMobile();
+  const { signOut, user } = useAuth();
 
   const NavLinks = () => (
     <>
       <Link to="/dashboard" className="font-medium hover:text-primary transition-colors">
         Dashboard
       </Link>
-      <Link to="/assignments" className="font-medium hover:text-primary transition-colors">
+      <Link to="/assessments" className="font-medium hover:text-primary transition-colors">
         Assignments
       </Link>
       <Link to="/analytics" className="font-medium hover:text-primary transition-colors">
@@ -68,8 +70,21 @@ export function Header({ toggleSidebar }: HeaderProps) {
         )}
         
         <div className="flex items-center gap-2">
-          <Button variant="outline">Sign In</Button>
-          <Button>Sign Up</Button>
+          {user ? (
+            <Button variant="ghost" onClick={() => signOut()} className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </Button>
+          ) : (
+            <>
+              <Button variant="outline" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/auth">Sign Up</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
