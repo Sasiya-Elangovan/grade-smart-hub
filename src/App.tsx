@@ -13,6 +13,8 @@ import CodeAssessment from "./pages/assessment/CodeAssessment";
 import HandwritingAssessment from "./pages/assessment/HandwritingAssessment";
 import MathAssessment from "./pages/assessment/MathAssessment";
 import AllAssessments from "./pages/assessment/AllAssessments";
+import Analytics from "./pages/analytics/Analytics";
+import Settings from "./pages/settings/Settings";
 import AuthPage from "./pages/auth/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -53,6 +55,8 @@ const App = () => (
               <Route path="/assessment/handwriting" element={<HandwritingAssessment />} />
               <Route path="/assessment/math" element={<MathAssessment />} />
               <Route path="/assessments" element={<AllAssessments />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />

@@ -7,7 +7,9 @@ import {
   FileText, 
   Calculator, 
   PenTool, 
-  LayoutDashboard
+  LayoutDashboard,
+  Settings,
+  LineChart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -50,6 +52,11 @@ export function Sidebar({ collapsed }: SidebarProps) {
       title: "All Assessments",
       href: "/assessments",
       icon: <BookOpen className="h-5 w-5" />
+    },
+    {
+      title: "Analytics",
+      href: "/analytics",
+      icon: <LineChart className="h-5 w-5" />
     }
   ];
 
@@ -88,9 +95,12 @@ export function Sidebar({ collapsed }: SidebarProps) {
               "justify-start",
               collapsed ? "justify-center" : ""
             )}
+            asChild
           >
-            <span className={cn("mr-2", collapsed ? "mr-0" : "")}>🔧</span>
-            {!collapsed && "Settings"}
+            <Link to="/settings">
+              <span className={cn("mr-2", collapsed ? "mr-0" : "")}><Settings className="h-4 w-4" /></span>
+              {!collapsed && "Settings"}
+            </Link>
           </Button>
         </div>
       </div>

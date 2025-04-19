@@ -7,6 +7,7 @@ import { FeaturesOverview } from "@/components/dashboard/FeaturesOverview";
 import { FeedbackResult } from "@/components/assessment/FeedbackResult";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { NewAssessmentModal } from "@/components/assessment/NewAssessmentModal";
 
 const Dashboard = () => {
   const demoFeedback = {
@@ -43,10 +44,7 @@ const Dashboard = () => {
             Welcome to GradeSmartAI, your AI-powered assessment platform.
           </p>
         </div>
-        <Button>
-          <Sparkles className="mr-2 h-4 w-4" />
-          New Assessment
-        </Button>
+        <NewAssessmentModal />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
